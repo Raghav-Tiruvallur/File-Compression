@@ -19,6 +19,28 @@ class myComparator {
 };
 
 
+// char getCharacter(char c,Node* temp)
+// {
+//     queue<pair<Node*,string>> q;
+//     q.push({temp,""});
+//     while(!q.empty())
+//     {
+//         Node* node=q.front().first;
+//         string current=q.front().second;
+//         q.pop();
+//         if(node->ch==c)
+//         {
+//             return current;
+//         }
+//         if(node->left)
+//         {
+//             q.push(node->left);
+//         }
+        
+//     }
+// }
+
+
 
 void getCodes(Node* head,unordered_map<char,string>& codes)
 {
@@ -47,15 +69,17 @@ void getCodes(Node* head,unordered_map<char,string>& codes)
 
 int main()
 {
-    string x="abcasiubjrlldbndbnjbsnvpudfuyhvkbbuardlbgl";
+    string x="abcasiubjrlldbndbnjbsnvpudfuyh vkbbuar dlbgl";
     unordered_map<char,int> f;
-    // f['a']=5;
-    // f['b']=9;
-    // f['c']=12;
-    // f['d']=13;
-    // f['e']=16;
-    // f['f']=45;
-    for(char c:x)  
+    ifstream file("file.txt");
+    ofstream compressed_file("compressed.txt");
+    string data;
+    string fileData;
+    while(getline(file,data))
+    {
+        fileData+=data+"\n";
+    }
+    for(char c:fileData)  
     {
         f[c]++;
     }
@@ -86,12 +110,31 @@ int main()
 
     }
     Node* head=pq.top();
-    
+    Node* temp=head;
     getCodes(head,codes);
-    for(auto p:codes)
+    string encodedText;
+    for(char c:fileData)
     {
-        cout<<p.first<<":"<<p.second<<"\n";
+        encodedText+=codes[c];
     }
-    
+    string uncompressed_data;
+    Node* root=temp;
+    for(char c:encodedText)
+    {
+        if(temp->ch!='$')
+        {
+            uncompressed_data+=temp->ch;
+            temp=root;
+        }
+        if(c == '0')
+        {
+            temp=temp->left;
+        }
+        else if(c == '1')
+        {
+            temp=temp->right;
+        }
+    }
+    cout<<uncompressed_data<<"\n";
 
 }
